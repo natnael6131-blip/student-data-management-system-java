@@ -1,32 +1,103 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         ArrayList<Student> students = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
 
-        students.add(new Student(1, "John", "Computer Science", 3.8));
-        students.add(new Student(2, "Sara", "Math", 3.6));
-        students.add(new Student(3, "David", "Engineering", 3.9));
+        do {
+            System.out.println("\n===== Student Management System =====");
+            System.out.println("1. Add Student");
+            System.out.println("2. View Students");
+            System.out.println("3. Update Student GPA");
+            System.out.println("4. Delete Student");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
 
-        System.out.println("Student Records:");
+            switch (choice) {
+                case 1:
+                    addStudent(students, scanner);
+                    break;
+                case 2:
+                    viewStudents(students);
+                    break;
+                case 3:
+                    updateStudentGpa(students, scanner);
+                    break;
+                case 4:
+                    deleteStudent(students, scanner);
+                    break;
+                case 5:
+                    System.out.println("Exiting program...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 5);
+
+        scanner.close();
+    }
+
+    public static void addStudent(ArrayList<Student> students, Scanner scanner) {
+        System.out.print("Enter student ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter student major: ");
+        String major = scanner.nextLine();
+
+        System.out.print("Enter student GPA: ");
+        double gpa = scanner.nextDouble();
+
+        students.add(new Student(id, name, major, gpa));
+        System.out.println("Student added successfully.");
+    }
+
+    public static void viewStudents(ArrayList<Student> students) {
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+        } else {
+            System.out.println("\nStudent Records:");
+            for (Student s : students) {
+                s.displayStudent();
+            }
+        }
+    }
+
+    public static void updateStudentGpa(ArrayList<Student> students, Scanner scanner) {
+        System.out.print("Enter student ID to update GPA: ");
+        int id = scanner.nextInt();
+
         for (Student s : students) {
-            s.displayStudent();
+            if (s.id == id) {
+                System.out.print("Enter new GPA: ");
+                s.gpa = scanner.nextDouble();
+                System.out.println("GPA updated successfully.");
+                return;
+            }
         }
 
-        System.out.println("\nUpdating Sara's GPA...");
-        students.get(1).gpa = 3.7;
+        System.out.println("Student not found.");
+    }
 
-        System.out.println("\nAfter Update:");
-        for (Student s : students) {
-            s.displayStudent();
+    public static void deleteStudent(ArrayList<Student> students, Scanner scanner) {
+        System.out.print("Enter student ID to delete: ");
+        int id = scanner.nextInt();
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).id == id) {
+                students.remove(i);
+                System.out.println("Student deleted successfully.");
+                return;
+            }
         }
 
-        System.out.println("\nRemoving John...");
-        students.remove(0);
-
-        System.out.println("\nAfter Removal:");
-        for (Student s : students) {
-            s.displayStudent();
-        }
+        System.out.println("Student not found.");
     }
 }
